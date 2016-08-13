@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="50.0" minWidth="50.0" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #999999;" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="urm.Controllers.RegisterListCellController">
+   <children>
+      <Label fx:id="indexLabel" alignment="CENTER" layoutX="26.0" layoutY="6.0" text="Label" textAlignment="CENTER" textOverrun="WORD_ELLIPSIS" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <TextField fx:id="valueTextField" layoutX="-34.0" layoutY="40.0" prefHeight="20.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" />
+   </children>
+</AnchorPane>
