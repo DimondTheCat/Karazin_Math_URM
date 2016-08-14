@@ -1,28 +1,36 @@
 package urm.Controllers;
 
+import com.sun.javafx.scene.control.behavior.ScrollBarBehavior;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import com.sun.org.apache.xerces.internal.dom.events.EventImpl;
 import com.sun.org.apache.xerces.internal.impl.xs.util.StringListImpl;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.PopupWindow;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 import org.fxmisc.richtext.*;
 import sun.plugin.com.DispatchImpl;
 import urm.Main;
+import urm.Presenters.EditorPresenter;
 import urm.Utilities.*;
 import urm.Views.RegisterListCell;
 
@@ -39,15 +47,22 @@ enum EditorStates{
 
 public class Controller implements Initializable , InvalidationListener , CodeManagerDelegate{
 
+
+    //MARK: VIPER
+    public EditorControllerPresenterInterface presenter;
+
     //MARK: OUTLETS
     @FXML
-    InlineCssTextArea codeArea;
+    public InlineCssTextArea codeArea;
 
     @FXML
-    ListView listView;
+    public AnchorPane stage;
 
     @FXML
-    void onKeyPressed(KeyEvent keyEvent){
+    public ListView listView;
+
+    @FXML
+    public void onKeyPressed(KeyEvent keyEvent){
 
         if (keyEvent.getCode() == KeyCode.ENTER && keyEvent.isAltDown() && this.editorState == EditorStates.MayBeAutoCompleted){
             //auto-completion event
@@ -65,23 +80,23 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     }
 
     @FXML
-    void playButtonPressed(){
+    public void playButtonPressed(){
 
         CodeManager.sharedManager().setupManagerWithText(this.codeArea.getText());
     }
 
     @FXML
-    void stepButtonPressed(){
+    public void stepButtonPressed(){
 
     }
 
     @FXML
-    void stopButtonPressed(){
+    public void stopButtonPressed(){
 
     }
 
     @FXML
-    void resetButtonPressed(){
+    public void resetButtonPressed(){
 
 
     }
@@ -89,7 +104,7 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     //MARK: PROPERTY'S
     private PopOver autocompletionAlertPopover;
     private EditorStates editorState = EditorStates.NonDefined;
-    public ObservableList data = FXCollections.observableArrayList();
+
 
     private void setEditorState(EditorStates editorState) {
         this.editorState = editorState;
@@ -105,6 +120,9 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        this.presenter = new EditorPresenter();
+        this.presenter.setView(this);
+
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
         codeArea.textProperty().addListener(this);
@@ -112,40 +130,47 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
         CodeManager.sharedManager().delegate = this;
 
+
+        Main.stage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+
+                for (Node node: listView.lookupAll(".scroll-bar")){
+
+                    if (node instanceof ScrollBar) {
+                        final ScrollBar bar = (ScrollBar) node;
+                        bar.valueProperty().addListener(new ChangeListener<Number>() {
+                            @Override public void changed(ObservableValue<? extends Number> value, Number oldValue, Number newValue) {
+                                System.out.println(bar.getOrientation() + " " + newValue);
+                                presenter.registersDidScroll();
+                            }
+                        });
+                    }
+
+                    System.out.println(node);
+
+                }
+
+            }
+        });
+
+
+
+
         this.listView.setOnScroll(new javafx.event.EventHandler<ScrollEvent>() {
+
             @Override
             public void handle(ScrollEvent event) {
 
-                ListViewSkin<?> skin = (ListViewSkin<?>)listView.getSkin();
-                VirtualFlow<?> flow = (VirtualFlow<?>)skin.getChildren().get(0);
-
-                int last = flow.getLastVisibleCell().getIndex();
-
-                if (last >= data.size()-1){
-                    //update
-                    appendDataToIndex(data.size()+30);
-                }
+                presenter.registersDidScroll();
 
                 System.out.println(event);
             }
         });
 
+        System.out.println( this.listView.getOnScroll());
 
-        this.updateData();
-
-
-        this.listView.setCellFactory(new Callback<ListView<Register>, ListCell<Register>>() {
-
-            public ListCell<Register> call(ListView<Register> p) {
-
-                RegisterListCell cell = new RegisterListCell();
-
-                return cell;
-
-
-            }
-
-        });
+        this.presenter.viewInitializationCompeted();
 
     }
 
@@ -199,30 +224,7 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
     }
 
-    public void updateData(){
 
-        data = FXCollections.observableArrayList();
-
-        data.addAll(Register.createEmptyRegisters(30));
-
-        this.listView.setItems(data);
-
-    }
-
-    public void appendDataToIndex(int index){
-
-        for (int i = data.size() ; i <= index ; i++ ){
-
-            Register register = new Register();
-            register.index = i;
-            register.value = 0;
-
-            this.data.add(register);
-
-        }
-
-        this.listView.refresh();
-    }
 
     //MARK: CONTROLLER
 
@@ -316,7 +318,9 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
         spansBuilder.add(Collections.<String>emptyList() , rangeOfProblemRow.getStart());
         spansBuilder.add(Collections.singleton("error") , rangeOfProblemRow.getEnd());
 
-        this.codeArea.setStyleSpans( rangeOfProblemRow.getStart() , rangeOfProblemRow.getEnd() , "-fx-text-fill: red;" );
+
+
+//        this.codeArea.setStyleSpans( rangeOfProblemRow.getStart() , rangeOfProblemRow.getEnd() , "-fx-text-fill: red;" );
 //        this.codeArea.setStyleSpans(0 , spansBuilder.create());
 //        this.codeArea.setStyle(rangeOfProblemRow.getStart(),rangeOfProblemRow.getEnd() , styles);
         this.createAndShowDetachablePopupWithText(errorDescription);
