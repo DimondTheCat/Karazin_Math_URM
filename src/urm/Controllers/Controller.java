@@ -36,6 +36,8 @@ import urm.Views.RegisterListCell;
 
 //import java;
 import java.net.URL;
+//import org.fxmisc.richtext
+import java.time.format.TextStyle;
 import java.util.*;
 
 enum EditorStates{
@@ -53,7 +55,7 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
     //MARK: OUTLETS
     @FXML
-    public InlineCssTextArea codeArea;
+    public CodeArea codeArea;
 
     @FXML
     public AnchorPane stage;
@@ -120,10 +122,13 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        stage.getStylesheets().add(Controller.class.getResource("textAreaStyle.css").toExternalForm());
+
         this.presenter = new EditorPresenter();
         this.presenter.setView(this);
 
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+//        codeArea.setSty
 
         codeArea.textProperty().addListener(this);
         codeArea.caretPositionProperty().addListener(this);
@@ -314,10 +319,19 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
 //        StringListImpl style = new StringListImpl( new String[]{} , 1);
 
+        System.out.println("start " + rangeOfProblemRow.getStart());
+        System.out.println("end " + rangeOfProblemRow.getEnd());
+
+        System.out.println("err " + Collections.singleton("error"));
+
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         spansBuilder.add(Collections.<String>emptyList() , rangeOfProblemRow.getStart());
-        spansBuilder.add(Collections.singleton("error") , rangeOfProblemRow.getEnd());
+        spansBuilder.add(Collections.singleton("error") , rangeOfProblemRow.getEnd() - rangeOfProblemRow.getStart() );
+        spansBuilder.add(Collections.<String>emptyList() , codeArea.getLength() - rangeOfProblemRow.getEnd());
 
+        codeArea.setStyleSpans(0 , spansBuilder.create() );
+//        StyleSpans spans = codeArea.getStyleSpans( rangeOfProblemRow);
+//        StyleSpans newSpans = TextStyle
 
 
 //        this.codeArea.setStyleSpans( rangeOfProblemRow.getStart() , rangeOfProblemRow.getEnd() , "-fx-text-fill: red;" );
