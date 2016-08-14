@@ -56,7 +56,8 @@ public class CodeManager implements  RegistersManager{
         while (end < text.length()-1){
 
             String row = StringExtension.getTextRowWithCharAtIndex(text , start);
-            end = start + row.length();
+            end = start + row.length()+1;
+
 
             this.rows.add(row);
             this.rowsRanges.add(new IndexRange(start,end));

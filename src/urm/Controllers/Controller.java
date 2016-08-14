@@ -314,15 +314,11 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     @Override
     public void errorWhileParsing(CodeManager sender, String errorDescription, IndexRange rangeOfProblemRow) {
 
-//        ArrayList<String> styles = new ArrayList<>();
-//        styles.add();
 
-//        StringListImpl style = new StringListImpl( new String[]{} , 1);
-
-        System.out.println("start " + rangeOfProblemRow.getStart());
-        System.out.println("end " + rangeOfProblemRow.getEnd());
-
-        System.out.println("err " + Collections.singleton("error"));
+//        System.out.println("start " + rangeOfProblemRow.getStart());
+//        System.out.println("end " + rangeOfProblemRow.getEnd());
+//
+//        System.out.println("err " + Collections.singleton("error"));
 
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         spansBuilder.add(Collections.<String>emptyList() , rangeOfProblemRow.getStart());
@@ -330,13 +326,7 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
         spansBuilder.add(Collections.<String>emptyList() , codeArea.getLength() - rangeOfProblemRow.getEnd());
 
         codeArea.setStyleSpans(0 , spansBuilder.create() );
-//        StyleSpans spans = codeArea.getStyleSpans( rangeOfProblemRow);
-//        StyleSpans newSpans = TextStyle
 
-
-//        this.codeArea.setStyleSpans( rangeOfProblemRow.getStart() , rangeOfProblemRow.getEnd() , "-fx-text-fill: red;" );
-//        this.codeArea.setStyleSpans(0 , spansBuilder.create());
-//        this.codeArea.setStyle(rangeOfProblemRow.getStart(),rangeOfProblemRow.getEnd() , styles);
         this.createAndShowDetachablePopupWithText(errorDescription);
 
     }
