@@ -229,6 +229,39 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
     }
 
+    //MARK: text highlighting
+
+    public void highlightTextWithStyleInIndexRow(ArrayList<IndexRange> rangesOfProblemRow , String style) {
+
+        int lastKwEnd = 0;
+
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+
+        for(int counter = 0 ; counter < rangesOfProblemRow.size() ; counter++ ){
+
+            IndexRange range = rangesOfProblemRow.get(counter);
+
+            spansBuilder.add(Collections.<String>emptyList(), range.getStart() - lastKwEnd);
+            spansBuilder.add(Collections.singleton("style"), range.getEnd() - range.getStart());
+            lastKwEnd = range.getEnd();
+        }
+
+        spansBuilder.add(Collections.<String>emptyList(), codeArea.getLength() - lastKwEnd);
+    }
+
+    public void highlightTextAsErrorInIndexRows(ArrayList<IndexRange> rangesOfProblemRow ){
+
+        this.highlightTextWithStyleInIndexRow( rangesOfProblemRow , "error" );
+
+    }
+
+    public void highlightTextAsWorkOperationInIndexRows(ArrayList<IndexRange> rangesOfProblemRow ){
+
+        this.highlightTextWithStyleInIndexRow( rangesOfProblemRow , "operation" );
+
+    }
+
+
 
 
     //MARK: CONTROLLER
@@ -313,19 +346,6 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
 
     @Override
     public void errorWhileParsing(CodeManager sender, String errorDescription, IndexRange rangeOfProblemRow) {
-
-
-//        System.out.println("start " + rangeOfProblemRow.getStart());
-//        System.out.println("end " + rangeOfProblemRow.getEnd());
-//
-//        System.out.println("err " + Collections.singleton("error"));
-
-        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        spansBuilder.add(Collections.<String>emptyList() , rangeOfProblemRow.getStart());
-        spansBuilder.add(Collections.singleton("error") , rangeOfProblemRow.getEnd() - rangeOfProblemRow.getStart() );
-        spansBuilder.add(Collections.<String>emptyList() , codeArea.getLength() - rangeOfProblemRow.getEnd());
-
-        codeArea.setStyleSpans(0 , spansBuilder.create() );
 
         this.createAndShowDetachablePopupWithText(errorDescription);
 
