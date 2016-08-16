@@ -6,8 +6,4 @@ package urm.Utilities;
 public interface RegistersManager {
 
     Register getRegisterAtIndex(int index);
-    int getOperationNumber();
-    void setOperationNumber(int number);
-    void finishReached();
-
 }

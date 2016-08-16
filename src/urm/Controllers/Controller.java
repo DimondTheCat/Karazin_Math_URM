@@ -133,7 +133,7 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
         codeArea.textProperty().addListener(this);
         codeArea.caretPositionProperty().addListener(this);
 
-        CodeManager.sharedManager().delegate = this;
+
 
 
         Main.stage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
