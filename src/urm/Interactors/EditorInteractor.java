@@ -20,7 +20,10 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
     //MARK: Property's
     public EditorInteractorPresenterDelegate presenter;
+
+    //MARK: Mechanism
     public ObservableList registersData = FXCollections.observableArrayList();
+    public int mechanismCurrentOperation = 0;
 
     private ProcessLoop processLoopEntity = new ProcessLoop();
 
@@ -93,6 +96,18 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
         return (Register) this.registersData.get(index);
     }
+
+    @Override
+    public int getCurrentOperation() {
+        return this.mechanismCurrentOperation;
+    }
+
+    @Override
+    public void setCurrentOperation(int currentOperation) {
+
+        this.mechanismCurrentOperation = currentOperation;
+    }
+
 
     @Override
     public ArrayList<UrmOperation> getOperationsForProcessLoop() {

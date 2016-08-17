@@ -94,9 +94,9 @@ public class ProcessLoop {
 
     public void performCurrentOperation(){
 
-        if (this.operations.size() > this.currentOperationIndex){
+        if (this.operations.size() > this.datasource.getCurrentOperation()){
 
-            this.operations.get(this.currentOperationIndex).performOperation();
+            this.operations.get(this.datasource.getCurrentOperation()).performOperation();
         }else {
             //assert error
         }
@@ -107,7 +107,7 @@ public class ProcessLoop {
 
         if (this.isNextStep()){
 
-            this.currentOperationIndex++;
+            this.datasource.setCurrentOperation(this.datasource.getCurrentOperation()+1);
 
         }else{
             //assert error
@@ -122,12 +122,13 @@ public class ProcessLoop {
             this.operations = this.datasource.getOperationsForProcessLoop();
         }
 
-        currentOperationIndex = 0;
+        this.datasource.setCurrentOperation(0);
+//        currentOperationIndex = 0;
     }
 
     private boolean isNextStep(){
 
-        if (this.currentOperationIndex + 1 >= this.operations.size()){
+        if (this.datasource.getCurrentOperation() + 1 >= this.operations.size()){
             return false;
         }else {
             return true;
