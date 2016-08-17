@@ -47,7 +47,7 @@ enum EditorStates{
     NonDefined
 }
 
-public class Controller implements Initializable , InvalidationListener , CodeManagerDelegate{
+public class Controller implements Initializable , InvalidationListener{
 
 
     //MARK: VIPER
@@ -84,7 +84,8 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
     @FXML
     public void playButtonPressed(){
 
-        CodeManager.sharedManager().setupManagerWithText(this.codeArea.getText());
+        this.highlightTextWithStyleInIndexRow(new ArrayList<IndexRange>() , "none");
+        this.presenter.playButtonPressed();
     }
 
     @FXML
@@ -242,11 +243,13 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
             IndexRange range = rangesOfProblemRow.get(counter);
 
             spansBuilder.add(Collections.<String>emptyList(), range.getStart() - lastKwEnd);
-            spansBuilder.add(Collections.singleton("style"), range.getEnd() - range.getStart());
+            spansBuilder.add(Collections.singleton(style), range.getEnd() - range.getStart());
             lastKwEnd = range.getEnd();
         }
 
-        spansBuilder.add(Collections.<String>emptyList(), codeArea.getLength() - lastKwEnd);
+        spansBuilder.add(Collections.<String>emptyList(), codeArea.getLength() - lastKwEnd >= 0 ? codeArea.getLength() - lastKwEnd : 0 );
+
+        this.codeArea.setStyleSpans(0 , spansBuilder.create());
     }
 
     public void highlightTextAsErrorInIndexRows(ArrayList<IndexRange> rangesOfProblemRow ){
@@ -337,17 +340,5 @@ public class Controller implements Initializable , InvalidationListener , CodeMa
         }
     }
 
-    //CODE MANAGER DELEGATE
 
-    @Override
-    public void codeManagerCurrentOperationChanged(CodeManager sender, int operationNumber) {
-
-    }
-
-    @Override
-    public void errorWhileParsing(CodeManager sender, String errorDescription, IndexRange rangeOfProblemRow) {
-
-        this.createAndShowDetachablePopupWithText(errorDescription);
-
-    }
 }

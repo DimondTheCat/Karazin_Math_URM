@@ -6,7 +6,7 @@ import urm.Utilities.CodeManager;
 /**
  * Created by Дом on 23.06.2016.
  */
-public interface CodeManagerDelegate {
+public interface CodeManagerDelegate extends RegistersManager {
 
     void codeManagerCurrentOperationChanged(CodeManager sender , int operationNumber);
 

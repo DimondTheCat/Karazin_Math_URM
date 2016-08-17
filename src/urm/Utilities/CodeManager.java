@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 
 
-public class CodeManager implements  RegistersManager{
+public class CodeManager {
 
     private static CodeManager singleInstance;
 
@@ -35,16 +35,16 @@ public class CodeManager implements  RegistersManager{
 
             singleInstance = new CodeManager();
 
-            singleInstance.zeroPatter = Pattern.compile( "Z\\((\\d)\\)" );
-            singleInstance.increasePatter = Pattern.compile( "S\\((\\d)\\)");
-            singleInstance.transactionPatter = Pattern.compile("T\\((\\d),(\\d)\\)");
-            singleInstance.jumpPatter = Pattern.compile("J\\((\\d),(\\d),(\\d)\\)");
+            singleInstance.zeroPatter = Pattern.compile( "Z\\s*[(]\\s*([0-9]+)\\s*[)]\\s*" );
+            singleInstance.increasePatter = Pattern.compile( "S\\s*[(]\\s*([0-9]+)\\s*[)]\\s*");
+            singleInstance.transactionPatter = Pattern.compile("T\\s*[(]\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*[)]\\s*");
+            singleInstance.jumpPatter = Pattern.compile("J\\s*[(]\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*[)]\\s*");
         }
 
         return singleInstance;
     }
 
-    public void setupManagerWithText(String text){
+    public boolean setupManagerWithText(String text){
 
         int start = 0;
         int end = 0;
@@ -56,22 +56,22 @@ public class CodeManager implements  RegistersManager{
         while (end < text.length()-1){
 
             String row = StringExtension.getTextRowWithCharAtIndex(text , start);
-            end = start + row.length()+1;
+            end = start + row.length();
 
 
             this.rows.add(row);
             this.rowsRanges.add(new IndexRange(start,end));
 
-            start = end;
+            start = end + 1;
         }
-
-        this.configureOperations();
 
         this.currentOperation = 0;
 
+        return this.configureOperations();
+
     }
 
-    private void configureOperations(){
+    private boolean configureOperations(){
 
         for (int i = 0 ; i < this.rows.size() ; i++){
 
@@ -84,23 +84,26 @@ public class CodeManager implements  RegistersManager{
             String uncommentedPart = row.substring(0 , commentSignIndex);
 
             //if line contains just one symbol provide auto-complete popup
-            String code = uncommentedPart.replaceAll("\\s+","");
+            String code = uncommentedPart;
 
             if (code.length() <= 0) {
                 //finish
                 emptyOperation operation = new emptyOperation();
-                operation.collection = this;
+                operation.collection = delegate;
 
                 this.operations.add(operation);
 
             }else if (this.jumpPatter.matcher( code ).matches()){
 
-                Jumping operation = new Jumping();
-                operation.collection = this;
+                Matcher matcher = this.jumpPatter.matcher(code);
+                matcher.matches();
 
-                int left = Integer.parseInt(this.jumpPatter.matcher(code).group(0));
-                int center = Integer.parseInt(this.jumpPatter.matcher(code).group(1));
-                int right = Integer.parseInt(this.jumpPatter.matcher(code).group(2));
+                Jumping operation = new Jumping();
+                operation.collection = delegate;
+
+                int left = Integer.parseInt(matcher.group(1));
+                int center = Integer.parseInt(matcher.group(2));
+                int right = Integer.parseInt(matcher.group(3));
 
                 operation.leftRegisterIndex = left;
                 operation.centerRegisterIndex = center;
@@ -111,11 +114,14 @@ public class CodeManager implements  RegistersManager{
 
             }else if (this.transactionPatter.matcher(code).matches()){
 
-                Transaction operation = new Transaction();
-                operation.collection = this;
+                Matcher matcher = this.transactionPatter.matcher(code);
+                matcher.matches();
 
-                int left = Integer.parseInt(this.jumpPatter.matcher(code).group(0));
-                int right = Integer.parseInt(this.jumpPatter.matcher(code).group(1));
+                Transaction operation = new Transaction();
+                operation.collection = delegate;
+
+                int left = Integer.parseInt(matcher.group(1));
+                int right = Integer.parseInt(matcher.group(2));
 
                 operation.leftToValue = left;
                 operation.rightFromValue = right;
@@ -124,10 +130,13 @@ public class CodeManager implements  RegistersManager{
 
             }else if (this.increasePatter.matcher(code).matches()){
 
-                Increment operation = new Increment();
-                operation.collection = this;
+                Matcher matcher = this.increasePatter.matcher(code);
+                matcher.matches();
 
-                int value = Integer.parseInt(this.jumpPatter.matcher(code).group(0));
+                Increment operation = new Increment();
+                operation.collection = delegate;
+
+                int value = Integer.parseInt(matcher.group(1));
 
                 operation.registerIndex = value;
 
@@ -135,10 +144,13 @@ public class CodeManager implements  RegistersManager{
 
             }else if (this.zeroPatter.matcher(code).matches()){
 
-                Zero operation = new Zero();
-                operation.collection = this;
+                Matcher matcher = this.zeroPatter.matcher(code);
+                matcher.matches();
 
-                int value = Integer.parseInt(this.jumpPatter.matcher(code).group(0));
+                Zero operation = new Zero();
+                operation.collection = delegate;
+
+                int value = Integer.parseInt(matcher.group(1));
 
                 operation.registerIndex = value;
 
@@ -146,29 +158,14 @@ public class CodeManager implements  RegistersManager{
 
             }else {
                 this.delegate.errorWhileParsing(this , "No Mached Commands" , this.rowsRanges.get(i));
+                return false;
             }
 
 
         }
+
+        return true;
     }
 
-    @Override
-    public Register getRegisterAtIndex(int index) {
-        return null;
-    }
 
-    @Override
-    public int getOperationNumber() {
-        return 0;
-    }
-
-    @Override
-    public void setOperationNumber(int number) {
-
-    }
-
-    @Override
-    public void finishReached() {
-
-    }
 }

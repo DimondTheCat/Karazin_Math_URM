@@ -16,7 +16,7 @@ public class Jumping implements UrmOperation {
     @Override
     public void performOperation() {
 
-        this.collection.finishReached();
+//        this.collection.finishReached();
     }
 
 }

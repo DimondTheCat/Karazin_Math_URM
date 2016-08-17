@@ -3,6 +3,7 @@ package urm.Presenters;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.FXCollections;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -12,6 +13,8 @@ import urm.Interactors.EditorInteractor;
 import urm.Interactors.EditorInteractorPresenterDelegate;
 import urm.Utilities.Register;
 import urm.Views.RegisterListCell;
+
+import java.util.ArrayList;
 
 /**
  * Created by Дмитрий on 14.08.2016.
@@ -63,6 +66,27 @@ public class EditorPresenter
     }
 
     @Override
+    public void playButtonPressed() {
+
+        this.interactor.startMachine(this.view.codeArea.getText() , true);
+    }
+
+    @Override
+    public void stepButtonPressed() {
+
+    }
+
+    @Override
+    public void stopButtonPressed() {
+
+    }
+
+    @Override
+    public void resetButtonPressed() {
+
+    }
+
+    @Override
     public void registersDidScroll() {
 
         ListViewSkin<?> skin = (ListViewSkin<?>)this.view.listView.getSkin();
@@ -92,5 +116,14 @@ public class EditorPresenter
     @Override
     public void registersDataDidUpdated() {
 
+    }
+
+    @Override
+    public void reseavedError(String errorDescription, IndexRange problemRange) {
+
+        ArrayList<IndexRange> ranges = new ArrayList<>();
+        ranges.add(problemRange);
+
+        this.view.highlightTextAsErrorInIndexRows(ranges);
     }
 }

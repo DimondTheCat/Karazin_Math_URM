@@ -2,4 +2,9 @@
 .error{
     -fx-fill: red;
     -fx-font-weight: bold;
-    }
+}
+
+.operation{
+    -fx-fill: blue;
+    -fx-font-weight: bold;
+}

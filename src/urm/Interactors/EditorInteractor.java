@@ -2,8 +2,11 @@ package urm.Interactors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.IndexRange;
 import urm.Entities.ProcessLoop;
 import urm.Entities.ProcessLoopDatasource;
+import urm.Utilities.CodeManager;
+import urm.Utilities.CodeManagerDelegate;
 import urm.Utilities.Register;
 import urm.Utilities.RegistersManager;
 import urm.Utilities.operations.UrmOperation;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by Дмитрий on 14.08.2016.
  */
-public class EditorInteractor implements RegistersManager , ProcessLoopDatasource {
+public class EditorInteractor implements RegistersManager , ProcessLoopDatasource , CodeManagerDelegate{
 
     //MARK: Property's
     public EditorInteractorPresenterDelegate presenter;
@@ -28,14 +31,37 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
         super();
 
         this.processLoopEntity.datasource = this;
+        CodeManager.sharedManager().delegate = this;
 
     }
 
     //MARK: Methods
 
+    public void startMachine(String code , boolean inRealtime){
+
+        //create operations and check for errors
+        if ( CodeManager.sharedManager().setupManagerWithText(code) ){
+
+            //start processing
+            this.processLoopEntity.isNeedToRunInDebug = !inRealtime;
+            this.processLoopEntity.startEventLoop();
+        }
+
+    }
 
     //MARK: METHODS - CODE PROCESS LOOP
 
+    @Override
+    public void codeManagerCurrentOperationChanged(CodeManager sender, int operationNumber) {
+
+    }
+
+    @Override
+    public void errorWhileParsing(CodeManager sender, String errorDescription, IndexRange rangeOfProblemRow) {
+
+        this.presenter.reseavedError(errorDescription , rangeOfProblemRow);
+
+    }
 
 
     /*
@@ -70,6 +96,8 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
     @Override
     public ArrayList<UrmOperation> getOperationsForProcessLoop() {
-        return null;
+        return CodeManager.sharedManager().operations;
     }
+
+
 }

@@ -53,6 +53,14 @@ public class ProcessLoop {
                             if(!isNeedToHaltThread){
 
                                 //events
+                                performCurrentOperation();
+
+                                if (isNextStep()){
+                                    nextStep();
+                                }else {
+                                    processThreadIsRunning = false;
+                                    //completed successfully
+                                }
 
                             }else{
                                 break;
@@ -66,6 +74,7 @@ public class ProcessLoop {
 
                 this.processThreadIsRunning = true;
                 this.backgroundLoop.start();
+
             }else{
                 //assert error
             }
@@ -85,7 +94,7 @@ public class ProcessLoop {
 
     public void performCurrentOperation(){
 
-        if (this.operations.size() < this.currentOperationIndex){
+        if (this.operations.size() > this.currentOperationIndex){
 
             this.operations.get(this.currentOperationIndex).performOperation();
         }else {

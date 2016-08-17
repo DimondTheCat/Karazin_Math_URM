@@ -16,6 +16,13 @@ public interface EditorControllerPresenterInterface {
     //code editor
 
     //buttons bar
+    void playButtonPressed();
+
+    void stepButtonPressed();
+
+    void stopButtonPressed();
+
+    void resetButtonPressed();
 
     //registers
     void registersDidScroll();
