@@ -22,7 +22,19 @@ public class Transaction implements UrmOperation {
         //and fill it in left register
         Register destinationRegister = this.collection.getRegisterAtIndex(leftToValue);
         destinationRegister.value = value;
+//        destinationRegister.setValue(destinationRegister.value);
+    }
 
+    @Override
+    public void performOperationInMain() {
+
+        //get value of right register
+        int value = this.collection.getRegisterAtIndex(rightFromValue).value;
+
+        //and fill it in left register
+        Register destinationRegister = this.collection.getRegisterAtIndex(leftToValue);
+//        destinationRegister.value = value;
+        destinationRegister.setValue(destinationRegister.value);
     }
 
 }

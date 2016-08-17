@@ -11,6 +11,8 @@ public class ProcessLoop {
 
     //MARK: PROPERTIES
     public ProcessLoopDatasource datasource;
+    public ProcessLoopDelegate delegate;
+
     public boolean isNeedToRunInDebug = false;
 
     private volatile boolean processThreadIsRunning = false;
@@ -60,6 +62,7 @@ public class ProcessLoop {
                                 }else {
                                     processThreadIsRunning = false;
                                     //completed successfully
+                                    delegate.processLoopFinishedRunning();
                                 }
 
                             }else{
@@ -97,6 +100,17 @@ public class ProcessLoop {
         if (this.operations.size() > this.datasource.getCurrentOperation()){
 
             this.operations.get(this.datasource.getCurrentOperation()).performOperation();
+        }else {
+            //assert error
+        }
+
+    }
+
+    public void performCurrentOperationInMain(){
+
+        if (this.operations.size() > this.datasource.getCurrentOperation()){
+
+            this.operations.get(this.datasource.getCurrentOperation()).performOperationInMain();
         }else {
             //assert error
         }

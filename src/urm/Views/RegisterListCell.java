@@ -32,7 +32,6 @@ public class RegisterListCell extends ListCell<Register> {
             AnchorPane questionsOverview = (AnchorPane) loader.load();
 
             controller = loader.getController();
-
             graphics = questionsOverview;
 
             // Set person overview into the center of root layout.
@@ -54,7 +53,7 @@ public class RegisterListCell extends ListCell<Register> {
         } else {
             setText(null);
 
-            controller.register = register;
+            controller.setRegister(register);
             controller.updateContent();
             setGraphic(graphics);
 

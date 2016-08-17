@@ -14,4 +14,9 @@ public class emptyOperation implements UrmOperation {
 
 //        this.collection.finishReached();
     }
+
+    @Override
+    public void performOperationInMain() {
+
+    }
 }

@@ -17,6 +17,15 @@ public class Increment implements UrmOperation {
 
         Register register = this.collection.getRegisterAtIndex(this.registerIndex);
         register.value++;
+//        register.setValue(register.value+1);
+    }
+
+    @Override
+    public void performOperationInMain() {
+
+        Register register = this.collection.getRegisterAtIndex(this.registerIndex);
+//        register.value++;
+        register.setValue(register.value+1);
 
     }
 }

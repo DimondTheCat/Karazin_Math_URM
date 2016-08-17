@@ -1,9 +1,11 @@
 package urm.Utilities;
 
+import java.util.Observable;
+
 /**
  * Created by Дом on 23.06.2016.
  */
-public class Register {
+public class Register extends Observable {
 
     public int index;
     public int value;
@@ -21,5 +23,13 @@ public class Register {
         }
 
         return registers;
+    }
+
+    public void setValue(int value){
+
+        this.value = value;
+
+        setChanged();
+        notifyObservers();
     }
 }

@@ -29,4 +29,10 @@ public class Jumping implements UrmOperation {
 
     }
 
+    @Override
+    public void performOperationInMain() {
+
+        performOperation();
+    }
+
 }

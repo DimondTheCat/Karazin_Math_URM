@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.IndexRange;
 import urm.Entities.ProcessLoop;
 import urm.Entities.ProcessLoopDatasource;
+import urm.Entities.ProcessLoopDelegate;
 import urm.Utilities.CodeManager;
 import urm.Utilities.CodeManagerDelegate;
 import urm.Utilities.Register;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by Дмитрий on 14.08.2016.
  */
-public class EditorInteractor implements RegistersManager , ProcessLoopDatasource , CodeManagerDelegate{
+public class EditorInteractor implements RegistersManager , ProcessLoopDatasource , CodeManagerDelegate, ProcessLoopDelegate {
 
     //MARK: Property's
     public EditorInteractorPresenterDelegate presenter;
@@ -34,6 +35,7 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
         super();
 
         this.processLoopEntity.datasource = this;
+        this.processLoopEntity.delegate = this;
         CodeManager.sharedManager().delegate = this;
 
     }
@@ -66,6 +68,10 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
     }
 
+    @Override
+    public void processLoopFinishedRunning() {
+
+    }
 
     /*
     increase size of registers list
@@ -113,6 +119,7 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
     public ArrayList<UrmOperation> getOperationsForProcessLoop() {
         return CodeManager.sharedManager().operations;
     }
+
 
 
 }

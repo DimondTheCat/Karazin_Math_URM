@@ -10,5 +10,6 @@ public interface UrmOperation {
     RegistersManager collection = null;
 
     void performOperation();
+    void performOperationInMain();
 
 }
