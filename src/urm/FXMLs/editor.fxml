@@ -36,37 +36,47 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </CodeArea>
-            <HBox prefHeight="40.0" prefWidth="200.0" alignment="CENTER" style="-fx-border-color: #999999;">
-              <children>
-                  <Button mnemonicParsing="false" text="Play" alignment="CENTER" onAction="#playButtonPressed" >
-                      <HBox.margin>
-                          <Insets right="8"/>
-                      </HBox.margin>
-                  </Button>
 
-                  <Button mnemonicParsing="false" text="Step" alignment="CENTER" onAction="#stepButtonPressed">
-                      <HBox.margin>
-                          <Insets right="8"/>
-                      </HBox.margin>
-                  </Button>
-
-                  <Button mnemonicParsing="false" text="Stop" alignment="CENTER" onAction="#stopButtonPressed">
-                      <HBox.margin>
-                          <Insets right="8"/>
-                      </HBox.margin>
-                  </Button>
-
-                  <Button mnemonicParsing="false" text="Reset" alignment="CENTER" onAction="#resetButtonPressed">
-
-                  </Button>
-
-              </children>
-            </HBox>
             <ListView prefHeight="80.0" minHeight="80.0" maxHeight="80.0" prefWidth="200.0" VBox.vgrow="NEVER" fx:id="listView" orientation="HORIZONTAL">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </padding>
             </ListView>
+
+             <HBox prefHeight="40.0" prefWidth="200.0" alignment="CENTER" style="-fx-border-color: #999999;">
+                 <children>
+
+                     <Button text="Compile">
+                         <HBox.margin>
+                             <Insets right="8"/>
+                         </HBox.margin>
+                     </Button>
+
+                     <Button mnemonicParsing="false" text="Play" alignment="CENTER" onAction="#playButtonPressed">
+                         <HBox.margin>
+                             <Insets right="8"/>
+                         </HBox.margin>
+                     </Button>
+
+                     <Button mnemonicParsing="false" text="Step" alignment="CENTER" onAction="#stepButtonPressed">
+                         <HBox.margin>
+                             <Insets right="8"/>
+                         </HBox.margin>
+                     </Button>
+
+                     <Button mnemonicParsing="false" text="Stop" alignment="CENTER" onAction="#stopButtonPressed">
+                         <HBox.margin>
+                             <Insets right="8"/>
+                         </HBox.margin>
+                     </Button>
+
+                     <Button mnemonicParsing="false" text="Reset" alignment="CENTER" onAction="#resetButtonPressed">
+
+                     </Button>
+
+                 </children>
+             </HBox>
+
          </children>
       </VBox>
    </children>
