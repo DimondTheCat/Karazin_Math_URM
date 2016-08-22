@@ -16,6 +16,8 @@ public interface EditorControllerPresenterInterface {
     //code editor
 
     //buttons bar
+    void compileButtonPressed();
+
     void playButtonPressed();
 
     void stepButtonPressed();

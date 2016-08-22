@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -27,6 +28,9 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.*;
+import org.controlsfx.dialog.Dialog;
 import org.fxmisc.richtext.*;
 import sun.plugin.com.DispatchImpl;
 import urm.Main;
@@ -39,9 +43,9 @@ import java.net.URL;
 //import org.fxmisc.richtext
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.function.Consumer;
 
 enum EditorStates{
-
     MayBeAutoCompleted,
     Editing,
     NonDefined
@@ -80,6 +84,18 @@ public class Controller implements Initializable , InvalidationListener{
 
 
     }
+    @FXML
+    public void compileButtonPressed(){
+
+        this.createInformationPopup("Info");
+
+        //call compile , it means get get code
+        //test it for errors
+        //prepare rows , rows indexes and operation
+
+        this.presenter.compileButtonPressed();
+
+    }
 
     @FXML
     public void playButtonPressed(){
@@ -91,10 +107,13 @@ public class Controller implements Initializable , InvalidationListener{
     @FXML
     public void stepButtonPressed(){
 
+        this.presenter.stepButtonPressed();
     }
 
     @FXML
     public void stopButtonPressed(){
+
+        this.presenter.stopButtonPressed();
 
     }
 
@@ -211,6 +230,20 @@ public class Controller implements Initializable , InvalidationListener{
         if (this.autocompletionAlertPopover != null){
             this.autocompletionAlertPopover.hide();
         }
+    }
+
+    public void  createPopupForProgramFinished(){
+
+        createInformationPopup("Your Program did finshed");
+    }
+
+    private void createInformationPopup(String message){
+
+        final org.controlsfx.dialog.Dialog dialog = new Dialog(this.stage , "Information");
+
+        dialog.setContent("\nmessage\n");;
+
+        dialog.show();
     }
 
     private void createAndShowDetachablePopupWithText(String text){

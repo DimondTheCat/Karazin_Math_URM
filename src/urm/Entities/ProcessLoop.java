@@ -14,6 +14,7 @@ public class ProcessLoop {
     public ProcessLoopDelegate delegate;
 
     public boolean isNeedToRunInDebug = false;
+    public boolean isProcessRunInDebug = false;
 
     private volatile boolean processThreadIsRunning = false;
     private volatile boolean isNeedToHaltThread = false;
@@ -33,11 +34,22 @@ public class ProcessLoop {
     //MARK: METHODS
     public void startEventLoop(){
 
-        this.configureStartData();
-
         if (isNeedToRunInDebug){
 
+            if (isProcessRunInDebug){
+
+                debugOperationAndNextStep();
+            }else {
+
+                this.configureStartData();
+                this.isProcessRunInDebug = true;
+            }
+
+            this.delegate.processLoopDidChangeOperation();
+
         }else{
+
+            this.configureStartData();
 
             //check , is there any loop in  background
             if (!this.processThreadIsRunning){
@@ -91,6 +103,9 @@ public class ProcessLoop {
 
         if (this.backgroundLoop != null) {
             this.isNeedToHaltThread = true;
+        }else {
+
+            this.isProcessRunInDebug = false;
         }
 
     }
@@ -125,6 +140,22 @@ public class ProcessLoop {
 
         }else{
             //assert error
+        }
+
+    }
+
+    public void debugOperationAndNextStep(){
+
+
+        this.performCurrentOperationInMain();
+
+        if (isNextStep()){
+            nextStep();
+        }else {
+
+            //completed successfully
+            this.isProcessRunInDebug = false;
+            delegate.processLoopFinishedRunning();
         }
 
     }

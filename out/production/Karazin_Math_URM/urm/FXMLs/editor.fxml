@@ -46,7 +46,7 @@
              <HBox prefHeight="40.0" prefWidth="200.0" alignment="CENTER" style="-fx-border-color: #999999;">
                  <children>
 
-                     <Button text="Compile">
+                     <Button text="Compile" onAction="#compileButtonPressed">
                          <HBox.margin>
                              <Insets right="8"/>
                          </HBox.margin>

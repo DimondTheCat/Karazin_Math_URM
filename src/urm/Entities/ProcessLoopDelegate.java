@@ -6,4 +6,5 @@ package urm.Entities;
 public interface ProcessLoopDelegate {
 
     void processLoopFinishedRunning();
+    void processLoopDidChangeOperation();
 }

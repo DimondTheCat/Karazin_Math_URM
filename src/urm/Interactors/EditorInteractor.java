@@ -21,6 +21,7 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
     //MARK: Property's
     public EditorInteractorPresenterDelegate presenter;
+    public EditorInteractorMachineState machineState = EditorInteractorMachineState.NotBuilded;
 
     //MARK: Mechanism
     public ObservableList registersData = FXCollections.observableArrayList();
@@ -42,16 +43,53 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
 
     //MARK: Methods
 
-    public void startMachine(String code , boolean inRealtime){
+    public boolean buildCode( String code ){
 
-        //create operations and check for errors
-        if ( CodeManager.sharedManager().setupManagerWithText(code) ){
+        this.setCurrentOperation(0);
+        boolean isBuilded = CodeManager.sharedManager().setupManagerWithText(code);
 
-            //start processing
-            this.processLoopEntity.isNeedToRunInDebug = !inRealtime;
-            this.processLoopEntity.startEventLoop();
+        if (isBuilded){
+
+            this.machineState = EditorInteractorMachineState.Builded;
         }
 
+        return isBuilded;
+    }
+
+    public void runProgramm (){
+
+        if (this.machineState == EditorInteractorMachineState.Builded){
+
+            //start processing
+            this.processLoopEntity.isNeedToRunInDebug = false;
+            this.machineState = EditorInteractorMachineState.RunInRealtime;
+            this.processLoopEntity.startEventLoop();
+
+        }
+    }
+
+    public void performOneStepOfProgramm (){
+
+        if (this.machineState == EditorInteractorMachineState.Builded ||
+                this.machineState == EditorInteractorMachineState.RunInSteps){
+
+            //start processing
+            this.processLoopEntity.isNeedToRunInDebug = true;
+            this.machineState = EditorInteractorMachineState.RunInSteps;
+            this.processLoopEntity.startEventLoop();
+
+        }
+
+    }
+
+    public void stopProgramm (){
+
+        if ( this.machineState == EditorInteractorMachineState.RunInRealtime ||
+                this.machineState == EditorInteractorMachineState.RunInSteps){
+
+            this.processLoopEntity.stopEventLoop();
+
+        }
     }
 
     //MARK: METHODS - CODE PROCESS LOOP
@@ -71,6 +109,13 @@ public class EditorInteractor implements RegistersManager , ProcessLoopDatasourc
     @Override
     public void processLoopFinishedRunning() {
 
+        this.presenter.programDidFinished();
+    }
+
+    @Override
+    public void processLoopDidChangeOperation() {
+
+        this.presenter.updateCurrentOperation();
     }
 
     /*

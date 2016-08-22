@@ -11,6 +11,7 @@ import urm.Controllers.Controller;
 import urm.Controllers.EditorControllerPresenterInterface;
 import urm.Interactors.EditorInteractor;
 import urm.Interactors.EditorInteractorPresenterDelegate;
+import urm.Utilities.CodeManager;
 import urm.Utilities.Register;
 import urm.Views.RegisterListCell;
 
@@ -66,19 +67,27 @@ public class EditorPresenter
     }
 
     @Override
+    public void compileButtonPressed() {
+
+        this.interactor.buildCode(this.view.codeArea.getText());;
+    }
+
+    @Override
     public void playButtonPressed() {
 
-        this.interactor.startMachine(this.view.codeArea.getText() , true);
+        this.interactor.runProgramm();
     }
 
     @Override
     public void stepButtonPressed() {
 
+        this.interactor.performOneStepOfProgramm();
     }
 
     @Override
     public void stopButtonPressed() {
 
+        this.interactor.stopProgramm();
     }
 
     @Override
@@ -126,4 +135,22 @@ public class EditorPresenter
 
         this.view.highlightTextAsErrorInIndexRows(ranges);
     }
+
+    @Override
+    public void updateCurrentOperation(){
+
+        IndexRange range = CodeManager.sharedManager().rowsRanges.get(this.interactor.getCurrentOperation());
+        ArrayList<IndexRange> ranges = new ArrayList<>();
+        ranges.add(range);
+
+        this.view.highlightTextAsWorkOperationInIndexRows(ranges);
+    }
+
+    @Override
+    public void programDidFinished() {
+
+        this.view.createPopupForProgramFinished();
+    }
+
 }
+

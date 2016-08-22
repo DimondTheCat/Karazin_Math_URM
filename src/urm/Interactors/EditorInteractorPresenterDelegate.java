@@ -11,4 +11,8 @@ public interface EditorInteractorPresenterDelegate {
 
     void reseavedError(String errorDescription , IndexRange problemRange);
 
+    void updateCurrentOperation();
+
+    void programDidFinished();
+
 }
