@@ -88,6 +88,9 @@ public class ProcessLoop {
 
                             }else{
 
+                                processThreadIsRunning = false;
+                                isNeedToHaltThread = false;
+
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {

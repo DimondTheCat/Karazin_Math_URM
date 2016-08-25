@@ -23,7 +23,7 @@ public class Jumping implements UrmOperation {
 
         if (register1.value == register2.value){
 
-            this.collection.setCurrentOperation(jumpRowIndex-1);
+            this.collection.setCurrentOperation(jumpRowIndex-2);
         }
 
 

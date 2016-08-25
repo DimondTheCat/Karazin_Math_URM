@@ -158,6 +158,19 @@ public class EditorPresenter
     public void programDidFinished() {
 
         this.view.createPopupForProgramFinished();
+
+        updateRegistersUI();
     }
 
+    public void updateRegistersUI(){
+
+        for (Object obj : this.interactor.registersData) {
+
+            if (obj instanceof Register){
+                Register reg = (Register)obj;
+                reg.setValue(reg.value);
+            }
+
+        }
+    }
 }
