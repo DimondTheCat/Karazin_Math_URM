@@ -27,6 +27,7 @@ import urm.Main;
 import urm.Presenters.EditorPresenter;
 import urm.Utilities.CompletionDatasource;
 import urm.Utilities.StringExtension;
+import urm.Views.HelpMessage;
 
 import java.io.*;
 import java.net.URL;
@@ -501,7 +502,7 @@ public class Controller implements Initializable, InvalidationListener {
             text = new Label();
 
             text.setPrefSize(400,470);
-            String helpText = readFile("src\\help.txt");
+            String helpText = HelpMessage.getHelp();
             text.setText(helpText);
             popOver.setContentNode(text);
             popOver.setArrowSize(0);

@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Karazin_Math_URM:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Karazin_Math_URM_jar</output-path>
+    <root id="archive" name="Karazin_Math_URM.jar">
+      <element id="module-output" name="Karazin_Math_URM" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/controlsfx-8.40.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/openjfx-dialogs-1.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/richtextfx-0.6.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/reactfx-2.0-M4u1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/undofx-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/flowless-0.4.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/wellbehavedfx-0.1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

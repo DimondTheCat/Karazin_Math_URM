@@ -16,7 +16,7 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("FXMLs/editor.fxml"));
 
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Karazin_Math_URM");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
 
