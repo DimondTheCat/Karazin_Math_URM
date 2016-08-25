@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Karazin_Math_URM">
+    <output-path>$PROJECT_DIR$/out/artifacts/Karazin_Math_URM</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="urm.Main" />
+        <option name="description" value="" />
+        <option name="htmlParamFile" value="" />
+        <option name="paramFile" value="" />
+        <option name="title" value="My App" />
+        <option name="vendor" value="M" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Karazin_Math_URM.jar">
+        <element id="module-output" name="Karazin_Math_URM" />
+      </element>
+    </root>
+  </artifact>
+</component>

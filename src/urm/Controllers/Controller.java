@@ -30,10 +30,7 @@ import urm.Utilities.StringExtension;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ResourceBundle;
+import java.util.*;
 
 //import java;
 //import org.fxmisc.richtext
@@ -96,7 +93,7 @@ public class Controller implements Initializable, InvalidationListener {
 
     @FXML
     public void playButtonPressed(){
-        if(isCheckCode|this.isStopedProgramm) {
+        if(isCheckCode||this.isStopedProgramm) {
             this.highlightTextWithStyleInIndexRow(new ArrayList<IndexRange>(), "none");
             this.presenter.playButtonPressed();
             this.isStopedProgramm = false;
@@ -422,7 +419,7 @@ public class Controller implements Initializable, InvalidationListener {
 
     public void textInCodeArea(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        /*alert.setTitle("attention, you have not saved your code");
+        alert.setTitle("attention, you have not saved your code");
         alert.setHeaderText("for to save the current code, click \"save\"\n" +
                 "if not needed, click \"open\"");
         alert.setContentText("Choose your option.");
@@ -441,7 +438,7 @@ public class Controller implements Initializable, InvalidationListener {
             this.codeArea.deleteText(0,codeArea.getText().length());
             this.openButtonPressed();
         }
-        */
+
     }
 
     private String readFile(String path){

@@ -17,10 +17,10 @@ public class Transaction implements UrmOperation {
     public void performOperation() {
 
         //get value of right register
-        int value = this.collection.getRegisterAtIndex(rightFromValue).value;
+        int value = this.collection.getRegisterAtIndex(leftToValue).value;
 
         //and fill it in left register
-        Register destinationRegister = this.collection.getRegisterAtIndex(leftToValue);
+        Register destinationRegister = this.collection.getRegisterAtIndex(rightFromValue);
         destinationRegister.value = value;
 //        destinationRegister.setValue(destinationRegister.value);
     }
@@ -29,12 +29,12 @@ public class Transaction implements UrmOperation {
     public void performOperationInMain() {
 
         //get value of right register
-        int value = this.collection.getRegisterAtIndex(rightFromValue).value;
+        int value = this.collection.getRegisterAtIndex(leftToValue).value;
 
         //and fill it in left register
-        Register destinationRegister = this.collection.getRegisterAtIndex(leftToValue);
+        Register destinationRegister = this.collection.getRegisterAtIndex(rightFromValue);
 //        destinationRegister.value = value;
-        destinationRegister.setValue(destinationRegister.value);
+        destinationRegister.setValue(value);
     }
 
 }

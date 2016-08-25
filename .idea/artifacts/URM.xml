@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="javafx-preloader" build-on-make="true" name="URM">
+    <output-path>$PROJECT_DIR$/out/artifacts/URM</output-path>
+    <root id="archive" name="URM.jar">
+      <element id="module-output" name="Karazin_Math_URM" />
+    </root>
+  </artifact>
+</component>
