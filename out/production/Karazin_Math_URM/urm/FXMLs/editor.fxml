@@ -14,70 +14,77 @@
 <?import javafx.scene.layout.HBox?>
 <?import org.fxmisc.richtext.InlineCssTextArea?>
 <AnchorPane fx:id="stage" minHeight="240.0" minWidth="320.0" prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="urm.Controllers.Controller" stylesheets="@../Controllers/textAreaStyle.css" >
-   <children>
-      <VBox layoutX="15.0" layoutY="20.0" prefHeight="200.0" prefWidth="294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ToolBar prefHeight="40.0" prefWidth="200.0">
-              <items>
-                <Button mnemonicParsing="false" text="Button" />
-              </items>
-            </ToolBar>
-            <CodeArea fx:id="codeArea"
-                               prefHeight="200.0"
-                               prefWidth="200.0"
-                               style="-fx-text: #000000; -fx-text-fill: #FFFFFF;"
-                               VBox.vgrow="ALWAYS"
-                               onKeyPressed="#onKeyPressed"
-            >
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </CodeArea>
+    <children>
+        <VBox layoutX="15.0" layoutY="20.0" prefHeight="200.0" prefWidth="294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ToolBar prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                        <Button mnemonicParsing="false" text="Save" onAction="#saveButtonPressed"/>
+                    </items>
+                    <items>
+                        <Button mnemonicParsing="false" id="open" text="Open" onAction="#openButtonPressed"/>
+                    </items>
+                    <items>
+                        <Button mnemonicParsing="false" text="Help" onAction="#helpButtonPressed" />
+                    </items>
+                </ToolBar>
 
-            <ListView prefHeight="80.0" minHeight="80.0" maxHeight="80.0" prefWidth="200.0" VBox.vgrow="NEVER" fx:id="listView" orientation="HORIZONTAL">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" />
-               </padding>
-            </ListView>
+                <CodeArea fx:id="codeArea"
+                          prefHeight="200.0"
+                          prefWidth="200.0"
+                          style="-fx-text: #000000; -fx-text-fill: #FFFFFF;"
+                          VBox.vgrow="ALWAYS"
+                          onKeyPressed="#onKeyPressed"
+                        >
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </padding>
+                </CodeArea>
 
-             <HBox prefHeight="40.0" prefWidth="200.0" alignment="CENTER" style="-fx-border-color: #999999;">
-                 <children>
+                <ListView prefHeight="80.0" minHeight="80.0" maxHeight="80.0" prefWidth="200.0" VBox.vgrow="NEVER" fx:id="listView" orientation="HORIZONTAL">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                    </padding>
+                </ListView>
 
-                     <Button text="Compile" onAction="#compileButtonPressed">
-                         <HBox.margin>
-                             <Insets right="8"/>
-                         </HBox.margin>
-                     </Button>
+                <HBox prefHeight="40.0" prefWidth="200.0" alignment="CENTER" style="-fx-border-color: #999999;">
+                    <children>
 
-                     <Button mnemonicParsing="false" text="Play" alignment="CENTER" onAction="#playButtonPressed">
-                         <HBox.margin>
-                             <Insets right="8"/>
-                         </HBox.margin>
-                     </Button>
+                        <Button text="Compile" onAction="#compileButtonPressed">
+                            <HBox.margin>
+                                <Insets right="8"/>
+                            </HBox.margin>
+                        </Button>
 
-                     <Button mnemonicParsing="false" text="Step" alignment="CENTER" onAction="#stepButtonPressed">
-                         <HBox.margin>
-                             <Insets right="8"/>
-                         </HBox.margin>
-                     </Button>
+                        <Button mnemonicParsing="false" text="Run" alignment="CENTER" onAction="#playButtonPressed">
+                            <HBox.margin>
+                                <Insets right="8"/>
+                            </HBox.margin>
+                        </Button>
 
-                     <Button mnemonicParsing="false" text="Stop" alignment="CENTER" onAction="#stopButtonPressed">
-                         <HBox.margin>
-                             <Insets right="8"/>
-                         </HBox.margin>
-                     </Button>
+                        <Button mnemonicParsing="false" text="Step" alignment="CENTER" onAction="#stepButtonPressed">
+                            <HBox.margin>
+                                <Insets right="8"/>
+                            </HBox.margin>
+                        </Button>
 
-                     <Button mnemonicParsing="false" text="Reset" alignment="CENTER" onAction="#resetButtonPressed">
+                        <Button mnemonicParsing="false" text="Stop" alignment="CENTER" onAction="#stopButtonPressed">
+                            <HBox.margin>
+                                <Insets right="8"/>
+                            </HBox.margin>
+                        </Button>
 
-                     </Button>
+                        <Button mnemonicParsing="false" text="Reset" alignment="CENTER" onAction="#resetButtonPressed">
 
-                 </children>
-             </HBox>
+                        </Button>
 
-         </children>
-      </VBox>
-   </children>
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

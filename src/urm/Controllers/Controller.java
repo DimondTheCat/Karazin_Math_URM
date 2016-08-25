@@ -1,49 +1,40 @@
 package urm.Controllers;
 
-import com.sun.javafx.scene.control.behavior.ScrollBarBehavior;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
-import com.sun.org.apache.xerces.internal.dom.events.EventImpl;
-import com.sun.org.apache.xerces.internal.impl.xs.util.StringListImpl;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.PopupWindow;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.*;
 import org.controlsfx.dialog.Dialog;
-import org.fxmisc.richtext.*;
-import sun.plugin.com.DispatchImpl;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleSpansBuilder;
 import urm.Main;
 import urm.Presenters.EditorPresenter;
-import urm.Utilities.*;
-import urm.Views.RegisterListCell;
+import urm.Utilities.CompletionDatasource;
+import urm.Utilities.StringExtension;
+
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ResourceBundle;
 
 //import java;
-import java.net.URL;
 //import org.fxmisc.richtext
-import java.time.format.TextStyle;
-import java.util.*;
-import java.util.function.Consumer;
 
 enum EditorStates{
     MayBeAutoCompleted,
@@ -51,15 +42,18 @@ enum EditorStates{
     NonDefined
 }
 
-public class Controller implements Initializable , InvalidationListener{
+public class Controller implements Initializable, InvalidationListener {
 
-
+    private boolean isCheckCode = false;
+    private boolean isStopedProgramm = false;
     //MARK: VIPER
     public EditorControllerPresenterInterface presenter;
+
 
     //MARK: OUTLETS
     @FXML
     public CodeArea codeArea;
+
 
     @FXML
     public AnchorPane stage;
@@ -88,7 +82,8 @@ public class Controller implements Initializable , InvalidationListener{
     public void compileButtonPressed(){
 
         this.createInformationPopup("Info");
-
+        this.isCheckCode = true;
+        this.isStopedProgramm = false;
         //call compile , it means get get code
         //test it for errors
         //prepare rows , rows indexes and operation
@@ -99,29 +94,36 @@ public class Controller implements Initializable , InvalidationListener{
 
     @FXML
     public void playButtonPressed(){
-
-        this.highlightTextWithStyleInIndexRow(new ArrayList<IndexRange>() , "none");
-        this.presenter.playButtonPressed();
+        if(isCheckCode|this.isStopedProgramm) {
+            this.highlightTextWithStyleInIndexRow(new ArrayList<IndexRange>(), "none");
+            this.presenter.playButtonPressed();
+            this.isStopedProgramm = false;
+        }
     }
 
     @FXML
     public void stepButtonPressed(){
-
-        this.presenter.stepButtonPressed();
+        if(this.isCheckCode&!this.isStopedProgramm) {
+            this.presenter.stepButtonPressed();
+        }
     }
 
     @FXML
     public void stopButtonPressed(){
-
-        this.presenter.stopButtonPressed();
+        if(this.isCheckCode) {
+            this.presenter.stopButtonPressed();
+            this.isStopedProgramm = true;
+        }
 
     }
 
     @FXML
     public void resetButtonPressed(){
 
-
+        this.presenter.resetButtonPressed();
     }
+
+
 
     //MARK: PROPERTY'S
     private PopOver autocompletionAlertPopover;
@@ -165,7 +167,8 @@ public class Controller implements Initializable , InvalidationListener{
                     if (node instanceof ScrollBar) {
                         final ScrollBar bar = (ScrollBar) node;
                         bar.valueProperty().addListener(new ChangeListener<Number>() {
-                            @Override public void changed(ObservableValue<? extends Number> value, Number oldValue, Number newValue) {
+                            @Override
+                            public void changed(ObservableValue<? extends Number> value, Number oldValue, Number newValue) {
                                 System.out.println(bar.getOrientation() + " " + newValue);
                                 presenter.registersDidScroll();
                             }
@@ -182,7 +185,7 @@ public class Controller implements Initializable , InvalidationListener{
 
 
 
-        this.listView.setOnScroll(new javafx.event.EventHandler<ScrollEvent>() {
+        this.listView.setOnScroll(new EventHandler<ScrollEvent>() {
 
             @Override
             public void handle(ScrollEvent event) {
@@ -305,7 +308,7 @@ public class Controller implements Initializable , InvalidationListener{
     private void performCompletion(){
 
         int caretPosition = this.codeArea.getCaretPosition();
-        String character = String.valueOf(this.codeArea.getText().charAt(caretPosition-1));
+        String character = String.valueOf(this.codeArea.getText().charAt(caretPosition - 1));
 
         String completion = CompletionDatasource.sharedCompletion().completionValue(character);
 
@@ -335,13 +338,13 @@ public class Controller implements Initializable , InvalidationListener{
 
     private void observeTextPropertyOfCodeEditor(Observable observable){
 
-
+        this.isCheckCode = false;
         //get row
-        String row = StringExtension.getTextRowWithCharAtIndex(this.codeArea.getText(),this.codeArea.getCaretPosition());
+        String row = StringExtension.getTextRowWithCharAtIndex(this.codeArea.getText(), this.codeArea.getCaretPosition());
 //        System.out.println(row);
 
         //get cursor position at raw
-        int cursorPosition = StringExtension.getCursorPositionAtRowWithText(this.codeArea.getText(), row ,this.codeArea.getCaretPosition());
+        int cursorPosition = StringExtension.getCursorPositionAtRowWithText(this.codeArea.getText(), row, this.codeArea.getCaretPosition());
 //        System.out.println(cursorPosition);
 
         //separate row by comment line and get uncommented line
@@ -371,6 +374,135 @@ public class Controller implements Initializable , InvalidationListener{
         if (this.editorState != EditorStates.MayBeAutoCompleted){
             this.setEditorState(EditorStates.NonDefined);
         }
+    }
+
+    //            |
+    //ADDed Denis V
+    @FXML
+    public void openButtonPressed(){
+
+
+
+        String curCode = this.codeArea.getText();
+        if(curCode.length() == 0) {
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File file = fileChooser.showOpenDialog(new Stage());
+            if(file != null){
+                String s = this.readFile(file.getPath());
+                codeArea.insertText(0, s);
+            }
+            /*JFileChooser c = new JFileChooser();
+            int rVal = c.showOpenDialog(new JFrame());
+            if (rVal == JFileChooser.APPROVE_OPTION) {
+                String path = c.getCurrentDirectory().toString() + c.getSelectedFile().getName();
+                String s = this.readFile(path);
+                codeArea.insertText(0, s);
+            }*/
+        }else {
+            textInCodeArea();
+        }
+    }
+
+    public void textInCodeArea(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        /*alert.setTitle("attention, you have not saved your code");
+        alert.setHeaderText("for to save the current code, click \"save\"\n" +
+                "if not needed, click \"open\"");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonSave = new ButtonType("save");
+        ButtonType buttonOpen = new ButtonType("open");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonSave, buttonOpen,  buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonSave){
+            this.saveButtonPressed();
+            this.openButtonPressed();
+        } else if (result.get() == buttonOpen) {
+            this.codeArea.deleteText(0,codeArea.getText().length());
+            this.openButtonPressed();
+        }
+        */
+    }
+
+    private String readFile(String path){
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader in = new BufferedReader(new FileReader( new File(path).getAbsoluteFile()));
+            try {
+                String s;
+                while ((s = in.readLine()) != null) {
+                    sb.append(s);
+                    sb.append("\n");
+                }
+            } finally {
+                in.close();
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb.toString();
+    }
+    private void writeFile(String path, String text)throws IOException {
+        PrintWriter out = new PrintWriter(new File(path).getAbsoluteFile());
+        try {
+            char code[] = text.toCharArray();
+            for (int i = 0; i < code.length; i++) {
+                if(code[i]=='\n')
+                    out.print(System.lineSeparator());
+                else out.print(code[i]);
+            }
+        } finally {
+            out.close();
+        }
+    }
+
+    @FXML
+    public void saveButtonPressed(){
+
+        String myCode = this.codeArea.getText();
+        //System.out.println(myCode.length());
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(new Stage());
+        if(file != null) {
+            try {
+                writeFile(file.getPath(), myCode);
+            }catch (IOException e){}
+        }
+
+    }
+
+    @FXML
+    public void helpButtonPressed(){
+        if (this.autocompletionAlertPopover == null || !this.autocompletionAlertPopover.isShowing()){
+
+            PopOver popOver = new PopOver();
+
+            popOver.setDetachable(false);
+            Label text;
+            text = new Label();
+
+            text.setPrefSize(400,470);
+            String helpText = readFile("src\\help.txt");
+            text.setText(helpText);
+            popOver.setContentNode(text);
+            popOver.setArrowSize(0);
+
+            double x = codeArea.getLayoutX();
+            double y = codeArea.getLayoutY();
+            popOver.setX(x);
+            popOver.setY(y);
+            codeArea.setPopupWindow(popOver);
+
+            popOver.show(codeArea.getScene().getWindow());
+        }
+
     }
 
 

@@ -3,6 +3,7 @@ package urm.Presenters;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  */
 public class EditorPresenter
         implements
-        EditorControllerPresenterInterface ,
+        EditorControllerPresenterInterface,
         EditorInteractorPresenterDelegate {
 
     //MARK: CONSTRUCTORS
@@ -78,6 +79,7 @@ public class EditorPresenter
         this.interactor.runProgramm();
     }
 
+
     @Override
     public void stepButtonPressed() {
 
@@ -92,7 +94,13 @@ public class EditorPresenter
 
     @Override
     public void resetButtonPressed() {
-
+        ObservableList registersData = this.interactor.registersData;
+        for(int i = 0; i < registersData.size();i++){
+            Register register = (Register)registersData.get(i);
+            register.setValue(0);
+            registersData.set(i,register);
+        }
+        interactor.presenter.registersDataDidUpdated();
     }
 
     @Override
@@ -153,4 +161,3 @@ public class EditorPresenter
     }
 
 }
-
