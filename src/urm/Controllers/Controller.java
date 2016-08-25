@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Wizard;
+import org.controlsfx.dialog.WizardPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpansBuilder;
@@ -242,11 +244,24 @@ public class Controller implements Initializable, InvalidationListener {
 
     private void createInformationPopup(String message){
 
-        final org.controlsfx.dialog.Dialog dialog = new Dialog(this.stage , "Information");
+//        org.controlsfx.dialog.Dialog dialog = new Dialog(this.stage , "Information");
+//
+//        dialog.setContent("\nmessage\n");;
+//
+//        dialog.show();
 
-        dialog.setContent("\nmessage\n");;
+        WizardPane page1 = new WizardPane();
+        page1.setContentText(message);
 
-        dialog.show();
+        // create wizard
+        Wizard wizard = new Wizard();
+
+        // create and assign the flow
+        wizard.setFlow(new Wizard.LinearFlow(page1));
+
+        // show wizard and wait for response
+        wizard.showAndWait();
+
     }
 
     private void createAndShowDetachablePopupWithText(String text){

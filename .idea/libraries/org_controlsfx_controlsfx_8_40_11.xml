@@ -1,6 +1,6 @@
 <component name="libraryTable">
-  <library name="org.controlsfx:controlsfx:8.40.9" type="repository">
-    <properties maven-id="org.controlsfx:controlsfx:8.40.9" />
+  <library name="org.controlsfx:controlsfx:8.40.11" type="repository">
+    <properties maven-id="org.controlsfx:controlsfx:8.40.11" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/controlsfx-8.40.9.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/openjfx-dialogs-1.0.3.jar!/" />

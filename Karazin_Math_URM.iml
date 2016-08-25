@@ -7,8 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.antlr:antlr-complete:3.5.2" level="project" />
-    <orderEntry type="library" name="org.fxmisc.richtext:richtextfx:0.6.10" level="project" />
-    <orderEntry type="library" name="org.controlsfx:controlsfx:8.40.9" level="project" />
+    <orderEntry type="library" exported="" name="org.fxmisc.richtext:richtextfx:0.6.10" level="project" />
+    <orderEntry type="library" exported="" name="org.controlsfx:controlsfx:8.40.11" level="project" />
   </component>
 </module>
