@@ -1,5 +1,6 @@
 package urm.Entities;
 
+import javafx.application.Platform;
 import urm.Utilities.operations.UrmOperation;
 
 import java.util.ArrayList;
@@ -74,10 +75,27 @@ public class ProcessLoop {
                                 }else {
                                     processThreadIsRunning = false;
                                     //completed successfully
-                                    delegate.processLoopFinishedRunning();
+
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            delegate.processLoopFinishedRunning();
+                                        }
+                                    });
+
                                 }
 
                             }else{
+
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        delegate.processLoopFinishedRunning();
+                                    }
+                                });
+
                                 break;
                             }
                         }
